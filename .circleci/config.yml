@@ -22,7 +22,7 @@ jobs:
             . capstone/bin/activate
             make lint  
   
-   build-push-docker-image:
+  build-push-docker-image:
     machine: true
     working_directory: ~/app
     steps:
