@@ -133,7 +133,7 @@ workflows:
             - lint
       - create-cluster:
           cluster-name: capstone
-           requires:
+          requires:
             - docker-image-build-push
       - deploy-cluster:
           cluster-name: capstone
