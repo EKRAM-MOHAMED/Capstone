@@ -45,12 +45,12 @@ jobs:
             #Login to docker hub
             docker login --username $DOCKERHUB_USER --password $DOCKERHUB_PWD
             # Build image and add a descriptive tag
-            docker build --tag=capstone-2 .
+            docker build --tag=capstone .
             # List docker images
             docker image ls
             # Push image to a docker repository
-            docker tag capstone-2 ekram321/capstone-2
-            docker push ekram321/capstone-2
+            docker tag capstone-2 ekram321/capstone
+            docker push ekram321/capstone
             
   create-cluster:
     executor: aws-eks/python3
@@ -103,10 +103,26 @@ jobs:
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           resource-file-path: deployment.yml
-          resource-name: deployment/capstone-2
+          resource-name: deployment/capstone
   
-  
-  
+
+  check-cluster:
+    executor: aws-eks/python3
+    parameters:
+      cluster-name:
+        description: |
+          capstone
+        type: string
+    steps:
+      - kubernetes/install
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+      - run:
+          name: check cluster
+          command: |
+            kubectl get nodes
+            kubectl get deployment
+
 
 workflows:
   deployment:
@@ -117,7 +133,31 @@ workflows:
             - lint
       - create-cluster:
           cluster-name: capstone
+           requires:
+            - docker-image-build-push
       - deploy-cluster:
           cluster-name: capstone
           requires:
             - create-cluster
+            
+      - aws-eks/update-container-image:
+          cluster-name: capstone
+          container-image-updates: capstone=ekram321/capstone
+          post-steps:
+              - kubernetes/delete-resource:
+                  resource-names: capstone
+                  resource-types: deployment
+                  wait: true
+          record: true
+          requires:
+            - deploy-cluster
+          resource-name: deployment/capstone
+          
+      - check-cluster:
+          cluster-name: capstone
+          requires: 
+            - aws-eks/update-container-image
+          
+      #- aws-eks/delete-cluster:
+      #    cluster-name: capstone
+      #    requires: [check-cluster]

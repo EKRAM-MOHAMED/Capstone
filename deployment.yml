@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: capstone-2
+  name: capstone
   labels:
-    app: capstone-2
+    app: capstone
   namespace: default
 spec:
   replicas: 2
   progressDeadlineSeconds: 3600
   selector:
     matchLabels:
-      app: capstone-2
+      app: capstone
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -19,12 +19,12 @@ spec:
   template:
     metadata:
       labels:
-        app: capstone-2
+        app: capstone
     spec:
       containers:
-        - image: ekram321/capstone-2
+        - image: ekram321/capstone
           imagePullPolicy: Always
-          name: capstone-2
+          name: capstone
           ports:
             - containerPort: 80
 
@@ -32,13 +32,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: capstone-2
+  name: capstone
   labels:
-    app: capstone-2
+    app: capstone
 spec:
   type: LoadBalancer
   selector:
-    app: capstone-2
+    app: capstone
   ports:
     - port: 80
       targetPort: 80
