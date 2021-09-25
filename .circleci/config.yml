@@ -49,7 +49,7 @@ jobs:
             # List docker images
             docker image ls
             # Push image to a docker repository
-            docker tag capstone-2 ekram321/capstone
+            docker tag capstone ekram321/capstone
             docker push ekram321/capstone
             
   create-cluster:
