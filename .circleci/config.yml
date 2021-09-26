@@ -13,7 +13,6 @@ executors:
     docker:
       - image: amazon/aws-cli
 
-
 jobs:
   lint:
     executor: python
@@ -105,7 +104,6 @@ jobs:
           resource-file-path: deployment.yml
           resource-name: deployment/capstone
   
-
   check-cluster:
     executor: aws-eks/python3
     parameters:
@@ -123,7 +121,6 @@ jobs:
             kubectl get nodes
             kubectl get deployment
 
-
 workflows:
   deployment:
     jobs:
@@ -139,7 +136,6 @@ workflows:
           cluster-name: capstone
           requires:
             - create-cluster
-            
             
       - aws-eks/update-container-image:
           cluster-name: capstone
