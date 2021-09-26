@@ -78,6 +78,7 @@ jobs:
             fi
             $SUDO mv eksctl_download/eksctl /usr/local/bin/
             rmdir eksctl_download
+            
       - aws-eks/create-cluster:
           cluster-name: << parameters.cluster-name >>
           skip-kubectl-install: false
@@ -128,10 +129,12 @@ workflows:
       - docker-image-build-push:
           requires:
             - lint
+            
       - create-cluster:
           cluster-name: capstone
           requires:
             - docker-image-build-push
+            
       - deploy-cluster:
           cluster-name: capstone
           requires:
