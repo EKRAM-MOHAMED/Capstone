@@ -1,4 +1,4 @@
-setup:
+./setup:
 	# Create python virtualenv & source it
 	python3 -m venv ~/.capstone
 	source ~/.capstone/bin/activate
